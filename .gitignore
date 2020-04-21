@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+
+# Notebooks
+.ipynb_checkpoints
+
+# Bytecode
+*.pyc
+
+# Data
+data/*
