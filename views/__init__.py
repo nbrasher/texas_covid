@@ -91,7 +91,7 @@ def all_counties_view(final_results, counties):
         template='plotly_white', 
         height=800, 
         width=1000,
-        margin={'l': 5, 't': 50},
+        margin={'l': 5, 't': 50, 'r': 5, 'b': 50},
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
     )

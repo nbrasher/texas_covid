@@ -30,7 +30,8 @@ app.layout = html.Div(children=[
             when it is greater than 1.0 the disease will spread rapidly, when it is below 1.0 the 
             daily number of new cases will decrease. The data is displayed for the 12 Texas counties with 
             the highest case counts.
-        '''
+        ''',
+        style = {'max-width': 1000}
     ),
 
     html.Div(
