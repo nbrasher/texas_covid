@@ -110,7 +110,45 @@ def all_counties_view(final_results, counties):
 
     return fig
 
-def new_cases_view(original, smoothed, county):
+def county_detail_view(df, final_results, county):
+    ''' County-by-county view
+    '''
+
+    fig = make_subplots(
+        rows=2, 
+        cols=1, 
+        horizontal_spacing=0.04,
+        vertical_spacing=0.15,
+        subplot_titles=[
+            f'{county} County Rt', 
+            f'{county} County New Cases'
+        ]
+    )
+    fig.update_layout(
+        template='plotly_white', 
+        height=800, 
+        width=600,
+        margin={'l': 5, 't': 50, 'r': 5, 'b': 50},
+        font={'color': 'rgb(0,0,0)'},
+        titlefont={'size': 12},
+        yaxis1={'range': [0, 5.]},
+        showlegend=False,
+    )
+    fig.update_xaxes(
+        range = [
+            PLOT_START,
+            next(iter(final_results.values())).index[-1] + pd.Timedelta(days=1),
+        ],
+        tickformat = '%m/%d'
+    )
+
+    fig = plot_rt(final_results[county], county, 
+                  fig, nrows=2, i=0)
+    fig = plot_new_cases(df.loc[county], county, fig)
+
+    return fig
+
+def plot_new_cases(result, name, fig):
     ''' Create generic view of historical cases
 
         Paramters:
@@ -121,31 +159,32 @@ def new_cases_view(original, smoothed, county):
         Returns:
             fig (go.Figure):
     '''
-    # Use Plotly to plot daily new cases
-    fig = go.Figure()
+    new_cases = result.diff()
 
-    fig.update_layout(template='plotly_white', 
-                    height=600,
-                    width=800,
-                    title_text=f'{county} County covid-19 cases')
+    smoothed = new_cases.rolling(7,
+        win_type='gaussian',
+        min_periods=1,
+        center=True).mean(std=2).round()
 
     fig.add_trace(
         go.Bar(
-            x=original.index,
-            y=original, 
-            marker = {'color': 'rgb(200, 200, 200)', 'opacity': .5},
+            x=result.index,
+            y=new_cases, 
+            marker = {'color': 'rgb(200, 200, 255)', 'opacity': .5},
             name='Daily Cases',
-        )
+        ),
+        row=2, col=1,
     )
 
     fig.add_trace(
         go.Scatter(
-            x=original.index, 
+            x=result.index, 
             y=smoothed,                   
             mode='lines', 
             line_color='royalblue',
             name='Moving Average'
-        )
+        ),
+        row=2, col=1,
     )
 
     return fig
