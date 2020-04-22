@@ -83,12 +83,15 @@ def all_counties_view(final_results, counties):
     fig = make_subplots(rows=nrows, cols=ncols, subplot_titles=counties)
     fig.update_layout(template='plotly_white', 
                     height=800, 
-                    width=1200)
+                    width=1000)
     fig.update_yaxes(range = [0, 5])
-    fig.update_xaxes(range = [
-        PLOT_START,
-        next(iter(final_results.values())).index[-1] + pd.Timedelta(days=1)
-    ])
+    fig.update_xaxes(
+        range = [
+            PLOT_START,
+            next(iter(final_results.values())).index[-1] + pd.Timedelta(days=1),
+        ],
+        tickformat = '%m/%d'
+    )
 
     for i, county in enumerate(counties):
         fig = plot_rt(final_results[county], county, 

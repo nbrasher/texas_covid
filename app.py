@@ -19,24 +19,43 @@ fig = all_counties_view(final_results=final_results,
 app.layout = html.Div(children=[
     html.H1(children='Texas Covid-19'),
 
-    html.H6(
-        children='Data Updated: ' + datetime.strftime(
-            final_results['timestamp'], '%m/%d %I:%M %p')
+    dcc.Markdown(
+        children='''
+            Calculated below are up-to-date values for the covid-19 effective reproduction 
+            number __Rt__ in Texas counties using Kevin Systrom's methodology as described in [this notebook]
+            (https://github.com/k-sys/covid-19/blob/master/Realtime%20R0.ipynb) and deployed at 
+            [Rt.live](https://rt.live/). __Rt__ is a measure of how fast the outbreak is spreading, 
+            when it is greater than 1.0 the disease will spread rapidly, when it is below 1.0 the 
+            daily number of new cases will decrease. The data is displayed for the 12 Texas counties with 
+            the highest case counts.
+        '''
     ),
 
     html.Div(
-        children='''
-            These are up-to-date values for Rt, a key measure of how fast the virus 
-            is growing. It’s the average number of people who become infected by an
-            infectious person. If Rt is above 1.0, the virus will spread quickly. 
-            When Rt is below 1.0, the virus will stop spreading.
-        ''',
-        style={'width': 750}
+        children=[
+            html.Br(),
+            html.P(
+                'Data Updated: ' + datetime.strftime(
+                final_results['timestamp'], '%m/%d %I:%M %p'),
+                style = {
+                    'background-color': 'GhostWhite', 
+                    'align-items': 'center',
+                    'width': 225,
+                    }
+            ),
+        ]
     ),
 
     dcc.Graph(id='all-counties-view', figure=fig),
+
+    dcc.Markdown(
+        children='''
+            Data from [Texas Dept of Health and Human Services]
+            (https://dshs.texas.gov/coronavirus/additionaldata/)
+        '''
+    ),
 ])
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader=False)
+    app.run_server(use_reloader=False)
