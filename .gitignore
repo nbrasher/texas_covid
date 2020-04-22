@@ -5,8 +5,10 @@
 .vscode/
 
 # Notebooks
-.ipynb_checkpoints
-notebooks/*
+*.ipynb_checkpoints
 
 # Bytecode
 *.pyc
+
+# Data migration scripts
+scripts/*

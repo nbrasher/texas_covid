@@ -19,7 +19,7 @@ fig = all_counties_view(final_results=final_results,
 
 
 app.layout = html.Div(children=[
-    html.H1(children='Texas Covid-19'),
+    html.H1(children='Texas Covid-19 Rt'),
 
     dcc.Markdown(
         children='''
