@@ -80,10 +80,21 @@ def all_counties_view(final_results, counties):
     ncols = 4
     nrows = int(np.ceil(len(final_results.keys()) / ncols))
 
-    fig = make_subplots(rows=nrows, cols=ncols, subplot_titles=counties)
-    fig.update_layout(template='plotly_white', 
-                    height=800, 
-                    width=1000)
+    fig = make_subplots(
+        rows=nrows, 
+        cols=ncols, 
+        horizontal_spacing=0.04,
+        vertical_spacing=0.1,
+        subplot_titles=counties
+    )
+    fig.update_layout(
+        template='plotly_white', 
+        height=800, 
+        width=1000,
+        margin={'l': 5, 't': 50},
+        font={'color': 'rgb(0,0,0)'},
+        titlefont={'size': 12},
+    )
     fig.update_yaxes(range = [0, 5])
     fig.update_xaxes(
         range = [

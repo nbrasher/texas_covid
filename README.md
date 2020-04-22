@@ -7,7 +7,7 @@ Download recent case count data with  `curl -o data/Texas\ COVID-19\ Case\ Count
 ### Jupyter Setup
 1. Create a virtual environment with `conda env create -f requirements.yml`
 1. Launch Jupyter with `jupyter lab`
-- In order to integrate plotly into the jupyter build follow [these instructions](https://plotly.com/python/getting-started/#jupyterlab-support-python-35)
+    - In order to integrate plotly into the jupyter build follow [these instructions](https://plotly.com/python/getting-started/#jupyterlab-support-python-35)
 
 ### Dash Setup
 In order to run the Dash App:
