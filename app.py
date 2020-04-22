@@ -6,19 +6,21 @@ from dash.dependencies import Input, Output
 from utils import load_cases, INCLUDE_COUNTIES
 from views import all_counties_view, county_detail_view
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+# Main app settings
+app = dash.Dash(
+    __name__, 
+    external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css']
+)
 server = app.server
 app.title = 'Texas Rt Calculations'
 app.config.suppress_callback_exceptions = True
-
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div(id='page-content')
 ])
 
-# Calculate initial view for counties
+# Load raw data and calculate initial views
 df, final_results = load_cases()
 all_counties_fig = all_counties_view(final_results=final_results, 
                         counties=INCLUDE_COUNTIES)
@@ -27,6 +29,7 @@ county_detail_fig = county_detail_view(df=df,
                         county=INCLUDE_COUNTIES[0])
 
 
+# Main page layout
 main_layout = html.Div(children=[
     html.H1(children='Texas Covid-19 Rt'),
 
@@ -70,6 +73,8 @@ main_layout = html.Div(children=[
     ),
 ])
 
+
+# County detail page layout
 detail_layout = html.Div(children=[
     html.H1(children='Texas Covid-19 Rt'),
 
@@ -117,24 +122,36 @@ detail_layout = html.Div(children=[
 ])
 
 
-# Main routing
-@app.callback(dash.dependencies.Output('page-content', 'children'),
-              [dash.dependencies.Input('url', 'pathname')])
+# Broken route layout
+error_layout = html.Div(children=[
+    dcc.Markdown(
+        children='''
+            Whoops! Something went wrong, go back to the [top level](/).
+        '''
+    ),
+])
+
+
+# Main routing callback
+@app.callback(Output('page-content', 'children'),
+              [Input('url', 'pathname')])
 def display_page(pathname):
     if pathname == '/':
         return main_layout
     elif pathname == '/detail':
         return detail_layout
     else:
-        return main_layout
+        return error_layout
 
-# Detail page callbacks
+
+# Detail page callback
 @app.callback(Output('county-detail-view', 'figure'),
               [Input('county-dropdown', 'value')])
 def callback_detail_view(value):
     return county_detail_view(df=df, 
                         final_results=final_results, 
                         county=value)
+
 
 if __name__ == '__main__':
     app.run_server(use_reloader=False)
