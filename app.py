@@ -9,6 +9,7 @@ from views import all_counties_view, county_detail_view
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+server = app.server
 app.title = 'Texas Rt Calculations'
 app.config.suppress_callback_exceptions = True
 
