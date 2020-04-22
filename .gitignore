@@ -6,6 +6,7 @@
 
 # Notebooks
 .ipynb_checkpoints
+notebooks/*
 
 # Bytecode
 *.pyc
