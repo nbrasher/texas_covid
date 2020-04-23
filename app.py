@@ -37,7 +37,7 @@ main_layout = html.Div(children=[
         children='''
             Calculated below are up-to-date values for the covid-19 effective reproduction 
             number __Rt__ in Texas counties using Kevin Systrom's methodology as described in [this notebook]
-            (https://github.com/k-sys/covid-19/blob/master/Realtime%20R0.ipynb) and deployed at 
+            (https://github.com/k-sys/covid-19/blob/master/Realtime%20Rt%20mcmc.ipynb) and deployed at 
             [Rt.live](https://rt.live/). __Rt__ is a measure of how fast the outbreak is spreading, 
             when it is greater than 1.0 the disease will spread rapidly, when it is below 1.0 the 
             daily number of new cases will decrease. The data is displayed for the 12 Texas counties with 

@@ -10,5 +10,6 @@
 # Bytecode
 *.pyc
 
-# Data migration scripts
+# Large data and migration scripts
+data/linelist.csv
 scripts/*

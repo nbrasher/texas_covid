@@ -1,43 +1,21 @@
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-
-from scipy.interpolate import interp1d
-from matplotlib.dates import date2num
 import pandas as pd
 import numpy as np
 
 PLOT_START = pd.Timestamp('2020-03-24')
 
 def plot_rt(result, name, fig, nrows=1, ncols=1, i=0):
-    # Aesthetically, extrapolate credible interval by 1 day either side
-    lowfn = interp1d(date2num(result.index),
-                     result['Low_90'].values,
-                     bounds_error=False,
-                     fill_value='extrapolate')
-
-    highfn = interp1d(date2num(result.index),
-                      result['High_90'].values,
-                      bounds_error=False,
-                      fill_value='extrapolate')
-
-    extended = pd.date_range(start=PLOT_START-pd.Timedelta(days=7),
-                             end=result.index[-1]+pd.Timedelta(days=1))
-
-    low_bound = lowfn(date2num(extended))
-    high_bound = highfn(date2num(extended))
-
-    # Build Plotly plot
-
-    # 90% Confidence shading
+    # 80% Confidence shading
     fig.add_trace(
         go.Scatter(
-            x=extended.append(extended[::-1]),
-            y=np.append(high_bound, low_bound[::-1]),
+            x=result.index.append(result.index[::-1]),
+            y=np.append(result['High_80'].values, result['Low_80'].values[::-1]),
             fill='toself',
             fillcolor='rgba(0, 0 , 0, 0.1)',
             line_color='rgba(255,255,255,0)',
             showlegend=False,
-            name='90% Confidence Interval'
+            name='80% Confidence Interval'
         ),
         row=i//ncols+1, col=i%ncols+1,
     )
@@ -95,7 +73,7 @@ def all_counties_view(final_results, counties):
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
     )
-    fig.update_yaxes(range = [0, 5])
+    fig.update_yaxes(range = [.5, 1.5])
     fig.update_xaxes(
         range = [
             PLOT_START,
@@ -131,7 +109,7 @@ def county_detail_view(df, final_results, county):
         margin={'l': 5, 't': 50, 'r': 5, 'b': 50},
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
-        yaxis1={'range': [0, 5.]},
+        yaxis1={'range': [.5, 1.5]},
         showlegend=False,
     )
     fig.update_xaxes(
