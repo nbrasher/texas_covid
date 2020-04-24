@@ -11,5 +11,5 @@
 *.pyc
 
 # Large data and migration scripts
-data/linelist.csv
+*.csv
 scripts/*
