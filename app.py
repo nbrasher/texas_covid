@@ -154,4 +154,4 @@ def callback_detail_view(value):
 
 
 if __name__ == '__main__':
-    app.run_server(use_reloader=False)
+    app.run_server(port=8050, host='127.0.0.1', use_reloader=False)
