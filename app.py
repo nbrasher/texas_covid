@@ -22,11 +22,15 @@ app.layout = html.Div([
 
 # Load raw data and calculate initial views
 df, final_results = load_cases()
-all_counties_fig = all_counties_view(final_results=final_results, 
-                        counties=INCLUDE_COUNTIES)
-county_detail_fig = county_detail_view(df=df, 
-                        final_results=final_results, 
-                        county=INCLUDE_COUNTIES[0])
+all_counties_fig = all_counties_view(
+        final_results=final_results, 
+        counties=INCLUDE_COUNTIES
+)
+county_detail_fig = county_detail_view(
+        result=final_results[INCLUDE_COUNTIES[0]], 
+        cases=df.loc[INCLUDE_COUNTIES[0]], 
+        county=INCLUDE_COUNTIES[0]
+)
 
 
 # Main page layout
@@ -148,9 +152,9 @@ def display_page(pathname):
 @app.callback(Output('county-detail-view', 'figure'),
               [Input('county-dropdown', 'value')])
 def callback_detail_view(value):
-    return county_detail_view(df=df, 
-                        final_results=final_results, 
-                        county=value)
+    return county_detail_view(result=final_results[value], 
+                              cases=df.loc[value], 
+                              county=value)
 
 
 if __name__ == '__main__':

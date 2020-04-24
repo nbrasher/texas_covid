@@ -5,7 +5,20 @@ import numpy as np
 
 PLOT_START = pd.Timestamp('2020-03-24')
 
-def plot_rt(result, name, fig, nrows=1, ncols=1, i=0):
+def plot_rt(result, fig, nrows=1, ncols=1, i=0):
+    ''' Plot individual counties Rt values along with shaded 80% confidence
+        intervals
+
+        Paramters:
+            result (pd.Series): Calculated Rt values for a given county
+            fig (go.Figure): Plotly figure with subplots
+            nrows (int): Number of rows in plotly figure
+            ncols (int): Number of columns in plotly figure
+            i (int): Index of subplot to add Rt traces to, zero-indexed
+        
+        Returns:
+            fig (go.Figure): Modified Plotly figure
+    '''
     # 80% Confidence shading
     fig.add_trace(
         go.Scatter(
@@ -52,7 +65,15 @@ def plot_rt(result, name, fig, nrows=1, ncols=1, i=0):
     return fig
 
 def all_counties_view(final_results, counties):
-    ''' Generate all counties Rt view
+    ''' Generate all counties view of calculated Rt value
+
+        Paramters:
+            final_results (dict[str: pd.DataFrame]): Dict with keys as county names, 
+                values as DataFrame of Rt and 80% confidence bounds by day
+            counties (list): List of county names
+        
+        Returns:
+            fig (go.Figure): Modified Plotly figure
     '''
     # Plot all counties on a 4x3 grid
     ncols = 4
@@ -83,23 +104,24 @@ def all_counties_view(final_results, counties):
     )
 
     for i, county in enumerate(counties):
-        fig = plot_rt(final_results[county], county, 
-                       fig, nrows=nrows, ncols=ncols, i=i)
+        fig = plot_rt(final_results[county], fig,
+                      nrows=nrows, ncols=ncols, i=i)
 
     return fig
 
-def plot_new_cases(result, name, fig):
-    ''' Create generic view of historical cases
+def plot_new_cases(cases, fig):
+    ''' Adds a subplot to the given figure containing a bar chart of
+        raw cases counts as well as a 7-day moving average
 
         Paramters:
-            original (pd.Series):
-            smoothed (pd.Series):
-            county (str):
+            cases (pd.Series): Time series of cumulative reported cases
+            fig (go.Figure): Plotly figure with one column and two rows 
+                of subplots, function modifies the bottom subplot
         
         Returns:
-            fig (go.Figure):
+            fig (go.Figure): Modified Plotly figure
     '''
-    new_cases = result.diff()
+    new_cases = cases.diff()
 
     smoothed = new_cases.rolling(7,
         win_type='gaussian',
@@ -108,7 +130,7 @@ def plot_new_cases(result, name, fig):
 
     fig.add_trace(
         go.Bar(
-            x=result.index,
+            x=cases.index,
             y=new_cases, 
             marker = {'color': 'rgb(200, 200, 255)', 'opacity': .5},
             name='Daily Cases',
@@ -118,7 +140,7 @@ def plot_new_cases(result, name, fig):
 
     fig.add_trace(
         go.Scatter(
-            x=result.index, 
+            x=cases.index, 
             y=smoothed,                   
             mode='lines', 
             line_color='royalblue',
@@ -129,10 +151,23 @@ def plot_new_cases(result, name, fig):
 
     return fig
 
-def county_detail_view(df, final_results, county):
-    ''' County-by-county view
-    '''
+def county_detail_view(result, cases, county):
+    ''' Created a county-by-county view, with a plot of Rt on top 
+        and a view of reported cases on bottom
 
+        Paramters:
+            result (pd.Series): Calculated Rt values for a given county
+            cases (pd.Series): Time series of cumulative reported cases
+            county (str): Name of county
+            fig (go.Figure): Plotly figure with one column and two rows 
+                of subplots, function modifies the bottom subplot
+        
+        Returns:
+            fig (go.Figure): Modified Plotly figure
+
+
+    '''
+    # Build subplot framework
     fig = make_subplots(
         rows=2, 
         cols=1, 
@@ -156,13 +191,13 @@ def county_detail_view(df, final_results, county):
     fig.update_xaxes(
         range = [
             PLOT_START,
-            next(iter(final_results.values())).index[-1] + pd.Timedelta(days=1),
+            result.index[-1] + pd.Timedelta(days=1),
         ],
         tickformat = '%m/%d'
     )
 
-    fig = plot_rt(final_results[county], county, 
-                  fig, nrows=2, i=0)
-    fig = plot_new_cases(df.loc[county], county, fig)
+    # Fill with county Rt view on top, reported cases on bottom
+    fig = plot_rt(result=result, fig=fig, nrows=2, i=0)
+    fig = plot_new_cases(cases=cases, fig=fig)
 
     return fig

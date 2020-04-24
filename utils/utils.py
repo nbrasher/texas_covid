@@ -23,12 +23,12 @@ INCLUDE_COUNTIES = [
 ]
 
 def load_cases():
-    ''' Read in raw Excel data  
+    ''' Read in raw case counts and model output from S3
 
         Returns:
-            df (pd.DataFrame): DataFrame of total Texas covid-19 cases by county and day
-            final_results (dict[Str: pd.DataFrame]): Dict with keys as county names, 
-                values as DataFrame of most likely Rt and 80% confidence bounds by day
+            df (pd.DataFrame): DataFrame of total Texas covid-19 cases by county
+            final_results (dict[str: pd.DataFrame]): Dict with keys as county names, 
+                values as DataFrame of Rt and 80% confidence bounds by day
     '''
     # Set up S3 connection
     s3c = boto3.client(

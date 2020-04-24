@@ -4,15 +4,6 @@
 # IDE
 .vscode/
 
-# Notebooks
-notebooks/*
-*.ipynb_checkpoints
-requirements.yml
-
 # Bytecode
 *.pyc
 *__pycache__*
-
-# Large data and migration scripts
-data/*
-scripts/*
