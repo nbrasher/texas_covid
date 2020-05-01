@@ -136,7 +136,7 @@ def plot_new_cases(cases, fig):
             marker = {'color': 'rgb(200, 200, 255)', 'opacity': .5},
             name='Daily Cases',
         ),
-        row=2, col=1,
+        row=1, col=2,
     )
 
     fig.add_trace(
@@ -147,7 +147,7 @@ def plot_new_cases(cases, fig):
             line_color='royalblue',
             name='Moving Average'
         ),
-        row=2, col=1,
+        row=1, col=2,
     )
 
     return fig
@@ -170,8 +170,8 @@ def county_detail_view(result, cases, county):
     '''
     # Build subplot framework
     fig = make_subplots(
-        rows=2, 
-        cols=1, 
+        rows=1, 
+        cols=2, 
         horizontal_spacing=0.04,
         vertical_spacing=0.15,
         subplot_titles=[
@@ -181,12 +181,13 @@ def county_detail_view(result, cases, county):
     )
     fig.update_layout(
         template='plotly_white', 
-        height=800, 
-        width=600,
+        height=400, 
+        width=950,
         margin={'l': 5, 't': 50, 'r': 5, 'b': 50},
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
-        yaxis1={'range': [.5, 1.5]},
+        yaxis1={'range': [.5, 1.5]}, 
+        yaxis2={'range': [0, 400]},
         showlegend=False,
     )
     fig.update_xaxes(
@@ -198,7 +199,7 @@ def county_detail_view(result, cases, county):
     )
 
     # Fill with county Rt view on top, reported cases on bottom
-    fig = plot_rt(result=result, fig=fig, nrows=2, i=0)
+    fig = plot_rt(result=result, fig=fig, ncols=2, i=0)
     fig = plot_new_cases(cases=cases, fig=fig)
 
     return fig
