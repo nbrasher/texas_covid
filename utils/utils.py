@@ -44,7 +44,7 @@ def load_cases():
 
     # Read in raw Daily data
     df = pd.read_csv(io.BytesIO(case_file['Body'].read()),
-                     index_col='County Name')
+                     index_col=0)
     
     # Get final computed results
     final_results = pickle.loads(results_file['Body'].read())
