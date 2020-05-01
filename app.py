@@ -10,7 +10,7 @@ from views import all_counties_view, county_detail_view
 # Main app settings
 app = dash.Dash(
     __name__, 
-    external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css']
+    external_stylesheets=['assets/bWLwgP.css']
 )
 server = app.server
 app.title = 'Texas Rt Calculations'
