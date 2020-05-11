@@ -26,7 +26,7 @@ def plot_rt(result, fig, nrows=1, ncols=1, i=0):
             x=result.index.append(result.index[::-1]),
             y=np.append(result['High_80'].values, result['Low_80'].values[::-1]),
             fill='toself',
-            fillcolor='rgba(0, 0 , 0, 0.1)',
+            fillcolor='rgba(0, 0, 0, 0.1)',
             line_color='rgba(255,255,255,0)',
             showlegend=False,
             name='80% Confidence Interval'
@@ -39,8 +39,8 @@ def plot_rt(result, fig, nrows=1, ncols=1, i=0):
         go.Scatter(
             x=result.index, y=result['ML'], 
             line_color='rgba(0,0,0,.2)', 
-            marker={'size': 10,
-                    'line': {'width': 1, 'color': 'rgb(50, 50, 50)'},
+            marker={'size': 9,
+                    'line': {'width': 0.5, 'color': 'rgba(0, 0, 0, 0.4)'},
                     'color': result['ML'], 
                     'cmin': 0.75,
                     'cmid': 1.0,
