@@ -1,3 +1,3 @@
-from .utils import INCLUDE_COUNTIES, load_cases
+from .utils import load_cases
 
-__all__ = ['INCLUDE_COUNTIES', 'load_cases']
+__all__ = ['load_cases']

@@ -5,22 +5,6 @@ import io
 import os
 import re
 
-# Calculate for 12 counties with highest case counts
-INCLUDE_COUNTIES = [
-    'Harris',
-    'Dallas',
-    'Tarrant',
-    'Travis',
-    'Bexar',
-    'Fort Bend',
-    'Denton',
-    'El Paso',
-    'Collin',
-    'Galveston',
-    'Lubbock',
-    'Montgomery'
-]
-
 def load_cases():
     ''' Read in raw case counts and model output from S3
 

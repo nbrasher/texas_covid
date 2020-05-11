@@ -3,8 +3,8 @@ import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 
-# Show 30 days worth of results
-PLOT_START = pd.Timestamp.today() - pd.Timedelta(days=31)
+# Show plots since the start of reliable test results
+PLOT_START = pd.Timestamp(year=2020, month=4, day=1)
 
 def plot_rt(result, fig, nrows=1, ncols=1, i=0):
     ''' Plot individual counties Rt values along with shaded 80% confidence
@@ -105,6 +105,7 @@ def all_counties_view(final_results, counties):
     )
 
     for i, county in enumerate(counties):
+        print(county)
         fig = plot_rt(final_results[county], fig,
                       nrows=nrows, ncols=ncols, i=i)
 

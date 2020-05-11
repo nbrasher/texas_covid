@@ -3,7 +3,7 @@ from datetime import datetime
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-from utils import load_cases, INCLUDE_COUNTIES
+from utils import load_cases
 from views import all_counties_view, county_detail_view
 
 
@@ -20,16 +20,19 @@ app.layout = html.Div([
     html.Div(id='page-content')
 ])
 
-# Load raw data and calculate initial views
+# Load raw data and get county list
 df, final_results = load_cases()
+counties = [k for k, v in final_results.items() 
+            if k != 'timestamp']
+
 all_counties_fig = all_counties_view(
         final_results=final_results, 
-        counties=INCLUDE_COUNTIES
+        counties=counties
 )
 county_detail_fig = county_detail_view(
-        result=final_results[INCLUDE_COUNTIES[0]], 
-        cases=df.loc[INCLUDE_COUNTIES[0]], 
-        county=INCLUDE_COUNTIES[0]
+        result=final_results[counties[0]], 
+        cases=df.loc[counties[0]], 
+        county=counties[0]
 )
 
 
@@ -110,8 +113,8 @@ detail_layout = html.Div(children=[
 
     dcc.Dropdown(
         id='county-dropdown',
-        options=[{'label': c, 'value': c} for c in INCLUDE_COUNTIES],
-        value=INCLUDE_COUNTIES[0],
+        options=[{'label': c, 'value': c} for c in counties],
+        value=counties[0],
         style={'width': 225}
     ),
 
