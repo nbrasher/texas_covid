@@ -1,3 +1,3 @@
-from .utils import load_cases
+from .utils import load_cases, areas_to_string
 
-__all__ = ['load_cases']
+__all__ = ['load_cases', 'areas_to_string']

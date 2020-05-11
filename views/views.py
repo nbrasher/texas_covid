@@ -105,7 +105,6 @@ def all_counties_view(final_results, counties):
     )
 
     for i, county in enumerate(counties):
-        print(county)
         fig = plot_rt(final_results[county], fig,
                       nrows=nrows, ncols=ncols, i=i)
 
@@ -153,14 +152,14 @@ def plot_new_cases(cases, fig):
 
     return fig
 
-def county_detail_view(result, cases, county):
+def county_detail_view(result, cases, area):
     ''' Created a county-by-county view, with a plot of Rt on top 
         and a view of reported cases on bottom
 
         Paramters:
             result (pd.Series): Calculated Rt values for a given county
             cases (pd.Series): Time series of cumulative reported cases
-            county (str): Name of county
+            area (str): Name of metro area
             fig (go.Figure): Plotly figure with one column and two rows 
                 of subplots, function modifies the bottom subplot
         
@@ -176,8 +175,8 @@ def county_detail_view(result, cases, county):
         horizontal_spacing=0.04,
         vertical_spacing=0.15,
         subplot_titles=[
-            f'{county} County Rt', 
-            f'{county} County New Cases'
+            f'{area} Area Rt', 
+            f'{area} Area New Cases'
         ]
     )
     fig.update_layout(
@@ -188,7 +187,7 @@ def county_detail_view(result, cases, county):
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
         yaxis1={'range': [.5, 1.5]}, 
-        yaxis2={'range': [0, 400]},
+        yaxis2={'range': [0, 500]},
         showlegend=False,
     )
     fig.update_xaxes(
