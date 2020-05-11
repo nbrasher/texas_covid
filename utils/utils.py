@@ -60,6 +60,6 @@ def areas_to_string(area):
     assert area in METROS.keys(), f'{area} is an invalid area name'
 
     if len(METROS[area]) < 2:
-        return f'The {area} area includes {METROS[area][0]} county'
+        return f'The **{area}** area view includes data from {METROS[area][0]} county'
     else:
-        return f"The **{area}** area includes {', '.join(METROS[area][:-1])} and {METROS[area][-1]} counties"
+        return f"The **{area}** area view includes data from {', '.join(METROS[area][:-1])} and {METROS[area][-1]} counties"

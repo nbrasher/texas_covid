@@ -47,10 +47,9 @@ main_layout = html.Div(children=[
             (https://github.com/k-sys/covid-19/blob/master/Realtime%20Rt%20mcmc.ipynb) and deployed at 
             [Rt.live](https://rt.live/). __Rt__ is a measure of how fast the outbreak is spreading, 
             when it is greater than 1.0 the disease will spread rapidly, when it is below 1.0 the 
-            daily number of new cases will decrease. The data is displayed for the 6 metro areas with 
-            the highest case counts.  
+            daily number of new cases will decrease. Data is displayed for the 8 largest metro areas.  
 
-            For a detailed view of individual metro areas go [here](/detail).
+            For a detailed view of individual areas go [here](/detail).
         ''',
         style = {'max-width': 1000}
     ),
