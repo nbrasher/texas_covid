@@ -11,7 +11,7 @@ METROS = {
     'DFW': ['Dallas', 'Tarrant', 'Collin', 'Denton'],
     'Austin': ['Travis', 'Williamson'],
     'San Antonio': ['Bexar'],
-    'Amarillo': ['Potter', 'Randall'],
+    'San Marcos': ['Hays'],
     'El Paso': ['El Paso'],
     'Rio Grande Valley': ['Hidalgo', 'Cameron'],
     'Lubbock': ['Lubbock'],
