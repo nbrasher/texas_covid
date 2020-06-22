@@ -189,7 +189,7 @@ def county_detail_view(result, cases, area):
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
         yaxis1={'range': [.5, 1.5]}, 
-        yaxis2={'range': [0, 1000]},
+        yaxis2={'range': [0, 1500]},
         showlegend=False,
     )
     fig.update_xaxes(
