@@ -21,7 +21,7 @@ app.layout = html.Div([
 ])
 
 # Load raw data and get county list
-df, final_results = load_cases()
+final_results = load_cases()
 areas = [k for k, v in final_results.items() 
             if k != 'timestamp']
 
@@ -31,7 +31,6 @@ all_counties_fig = all_counties_view(
 )
 county_detail_fig = county_detail_view(
         result=final_results[areas[0]], 
-        cases=df.loc[areas[0]], 
         area=areas[0]
 )
 
@@ -43,9 +42,8 @@ main_layout = html.Div(children=[
     dcc.Markdown(
         children='''
             Calculated below are up-to-date values for the covid-19 effective reproduction 
-            number __Rt__ in Texas metro areas using Kevin Systrom's methodology as described in [this notebook]
-            (https://github.com/k-sys/covid-19/blob/master/Realtime%20Rt%20mcmc.ipynb) and deployed at 
-            [Rt.live](https://rt.live/). __Rt__ is a measure of how fast the outbreak is spreading, 
+            number __Rt__ in Texas metro areas using the same methodology as [Rt.live](https://rt.live/). 
+            __Rt__ is a measure of how fast the outbreak is spreading, 
             when it is greater than 1.0 the disease will spread rapidly, when it is below 1.0 the 
             daily number of new cases will decrease. Data is displayed for the 8 largest metro areas.  
 
@@ -151,7 +149,6 @@ def display_page(pathname):
 def callback_detail_view(value):
     return areas_to_string(value), county_detail_view(
         result=final_results[value], 
-        cases=df.loc[value], 
         area=value)
 
 if __name__ == '__main__':

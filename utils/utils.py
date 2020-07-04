@@ -32,20 +32,13 @@ def load_cases():
         aws_access_key_id = os.environ['S3_ID'],
         aws_secret_access_key = os.environ['S3_KEY']
     )
-    case_file = s3c.get_object(Bucket= 'texas-covid', 
-                    Key = 'case_counts.csv')
     results_file = s3c.get_object(Bucket= 'texas-covid', 
                     Key = 'final_results.pkl')
-
-
-    # Read in raw Daily data
-    df = pd.read_csv(io.BytesIO(case_file['Body'].read()),
-                     index_col=0)
     
     # Get final computed results
     final_results = pickle.loads(results_file['Body'].read())
-    
-    return df, final_results
+
+    return final_results
 
 def areas_to_string(area):
     ''' Return a string describing county makeup of metro areaa

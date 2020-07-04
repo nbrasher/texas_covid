@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 # Show plots since the start of reliable test results
-PLOT_START = pd.Timestamp(year=2020, month=3, day=16)
+PLOT_START = pd.Timestamp(year=2020, month=4, day=22)
 
 def plot_rt(result, fig, nrows=1, ncols=1, i=0):
     ''' Plot individual counties Rt values along with shaded 80% confidence
@@ -24,7 +24,7 @@ def plot_rt(result, fig, nrows=1, ncols=1, i=0):
     fig.add_trace(
         go.Scatter(
             x=result.index.append(result.index[::-1]),
-            y=np.append(result['High_80'].values, result['Low_80'].values[::-1]),
+            y=np.append(result['upper_80'].values, result['lower_80'].values[::-1]),
             fill='toself',
             fillcolor='rgba(0, 0, 0, 0.1)',
             line_color='rgba(255,255,255,0)',
@@ -37,11 +37,11 @@ def plot_rt(result, fig, nrows=1, ncols=1, i=0):
     # Most Likely Rt
     fig.add_trace(
         go.Scatter(
-            x=result.index, y=result['ML'], 
+            x=result.index, y=result['mean'], 
             line_color='rgba(0,0,0,.2)', 
             marker={'size': 9,
                     'line': {'width': 0.5, 'color': 'rgba(0, 0, 0, 0.4)'},
-                    'color': result['ML'], 
+                    'color': result['mean'], 
                     'cmin': 0.75,
                     'cmid': 1.0,
                     'cmax': 1.25, 
@@ -97,7 +97,7 @@ def all_counties_view(final_results, counties):
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
     )
-    fig.update_yaxes(range = [.5, 1.5])
+    fig.update_yaxes(range = [.75, 1.75])
     fig.update_xaxes(
         range = [
             PLOT_START,
@@ -112,29 +112,23 @@ def all_counties_view(final_results, counties):
 
     return fig
 
-def plot_new_cases(cases, fig):
+def plot_new_cases(result, fig):
     ''' Adds a subplot to the given figure containing a bar chart of
         raw cases counts as well as a 7-day moving average
 
         Paramters:
-            cases (pd.Series): Time series of cumulative reported cases
+            result (pd.Series): Calculated Rt values for a given county
             fig (go.Figure): Plotly figure with one column and two rows 
                 of subplots, function modifies the bottom subplot
         
         Returns:
             fig (go.Figure): Modified Plotly figure
     '''
-    new_cases = cases.diff()
-
-    smoothed = new_cases.rolling(7,
-        win_type='gaussian',
-        min_periods=1,
-        center=True).mean(std=2).round()
 
     fig.add_trace(
         go.Bar(
-            x=cases.index,
-            y=new_cases, 
+            x=result.index,
+            y=result['positive'], 
             marker = {'color': 'rgb(200, 200, 255)', 'opacity': .5},
             name='Daily Cases',
         ),
@@ -143,24 +137,29 @@ def plot_new_cases(cases, fig):
 
     fig.add_trace(
         go.Scatter(
-            x=cases.index, 
-            y=smoothed,                   
+            x=result.index, 
+            y=result['test_adjusted_positive'],                   
             mode='lines', 
             line_color='royalblue',
-            name='Moving Average'
+            name='Adjusted Positives'
         ),
         row=1, col=2,
     )
-
+    fig.update_xaxes(
+        range = [
+            PLOT_START,
+            result.index[-1] + pd.Timedelta(days=1),
+        ],
+        tickformat = '%m/%d'
+    )
     return fig
 
-def county_detail_view(result, cases, area):
+def county_detail_view(result, area):
     ''' Created a county-by-county view, with a plot of Rt on top 
         and a view of reported cases on bottom
 
         Paramters:
             result (pd.Series): Calculated Rt values for a given county
-            cases (pd.Series): Time series of cumulative reported cases
             area (str): Name of metro area
             fig (go.Figure): Plotly figure with one column and two rows 
                 of subplots, function modifies the bottom subplot
@@ -188,7 +187,7 @@ def county_detail_view(result, cases, area):
         margin={'l': 5, 't': 50, 'r': 5, 'b': 50},
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
-        yaxis1={'range': [.5, 1.5]}, 
+        yaxis1={'range': [.75, 1.75]}, 
         yaxis2={'range': [0, 2000]},
         showlegend=False,
     )
@@ -202,6 +201,6 @@ def county_detail_view(result, cases, area):
 
     # Fill with county Rt view on top, reported cases on bottom
     fig = plot_rt(result=result, fig=fig, ncols=2, i=0)
-    fig = plot_new_cases(cases=cases, fig=fig)
+    fig = plot_new_cases(result=result, fig=fig)
 
     return fig
