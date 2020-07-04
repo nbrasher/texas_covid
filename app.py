@@ -85,7 +85,12 @@ detail_layout = html.Div(children=[
     dcc.Markdown(
         children='''
             Below is a view of Rt as well as the confirmed cases in a metro area 
-            reported by day. The 7-day rolling average of new cases is displayed in blue. 
+            reported by day. The blue line represents our test-corrected value with 
+            the noise in the data removed. This line takes into account increases or 
+            decreases in the number of tests performed. If an area is ramping up the 
+            total number of tests, the blue line will lag below actual cases in order 
+            to provide a more accurate comparision over time. If tests are slowing 
+            down, the blue line will be above actual cases.
 
             For a view of all metro areas go back to the [top level](/).
         ''',

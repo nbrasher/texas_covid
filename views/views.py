@@ -114,7 +114,7 @@ def all_counties_view(final_results, counties):
 
 def plot_new_cases(result, fig):
     ''' Adds a subplot to the given figure containing a bar chart of
-        raw cases counts as well as a 7-day moving average
+        raw cases counts as well as a adjusted positive cases
 
         Paramters:
             result (pd.Series): Calculated Rt values for a given county
@@ -141,7 +141,7 @@ def plot_new_cases(result, fig):
             y=result['test_adjusted_positive'],                   
             mode='lines', 
             line_color='royalblue',
-            name='Adjusted Positives'
+            name='Adjusted Cases'
         ),
         row=1, col=2,
     )
