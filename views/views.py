@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 # Show plots since the start of reliable test results
-PLOT_START = pd.Timestamp(year=2020, month=4, day=22)
+PLOT_START = pd.Timestamp(year=2020, month=3, day=17)
 
 def plot_rt(result, fig, nrows=1, ncols=1, i=0):
     ''' Plot individual counties Rt values along with shaded 80% confidence
