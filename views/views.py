@@ -112,48 +112,6 @@ def all_counties_view(final_results, counties):
 
     return fig
 
-def plot_new_cases(result, fig):
-    ''' Adds a subplot to the given figure containing a bar chart of
-        raw cases counts as well as a adjusted positive cases
-
-        Paramters:
-            result (pd.Series): Calculated Rt values for a given county
-            fig (go.Figure): Plotly figure with one column and two rows 
-                of subplots, function modifies the bottom subplot
-        
-        Returns:
-            fig (go.Figure): Modified Plotly figure
-    '''
-
-    fig.add_trace(
-        go.Bar(
-            x=result.index,
-            y=result['positive'], 
-            marker = {'color': 'rgb(200, 200, 255)', 'opacity': .5},
-            name='Daily Cases',
-        ),
-        row=1, col=2,
-    )
-
-    fig.add_trace(
-        go.Scatter(
-            x=result.index, 
-            y=result['test_adjusted_positive'],                   
-            mode='lines', 
-            line_color='royalblue',
-            name='Adjusted Cases'
-        ),
-        row=1, col=2,
-    )
-    fig.update_xaxes(
-        range = [
-            PLOT_START,
-            result.index[-1] + pd.Timedelta(days=1),
-        ],
-        tickformat = '%m/%d'
-    )
-    return fig
-
 def county_detail_view(result, area):
     ''' Created a county-by-county view, with a plot of Rt on top 
         and a view of reported cases on bottom
@@ -171,24 +129,29 @@ def county_detail_view(result, area):
     '''
     # Build subplot framework
     fig = make_subplots(
-        rows=1, 
+        rows=2, 
         cols=2, 
-        horizontal_spacing=0.04,
-        vertical_spacing=0.15,
+        horizontal_spacing=0.05,
+        vertical_spacing=0.1,
+        row_heights=[.7, .3],
         subplot_titles=[
             f'{area} Area Rt', 
-            f'{area} Area New Cases'
+            f'{area} Area New Cases',
+            'Test-Corrected Cases',
+            'Total Tests',
         ]
     )
     fig.update_layout(
         template='plotly_white', 
-        height=400, 
-        width=950,
+        height=750, 
+        width=1000,
         margin={'l': 5, 't': 50, 'r': 5, 'b': 50},
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
         yaxis1={'range': [.75, 1.75]}, 
         yaxis2={'range': [0, 2000]},
+        yaxis3={'range': [0, 2000]},
+        yaxis4={'range': [0, 20000]},
         showlegend=False,
     )
     fig.update_xaxes(
@@ -201,6 +164,65 @@ def county_detail_view(result, area):
 
     # Fill with county Rt view on top, reported cases on bottom
     fig = plot_rt(result=result, fig=fig, ncols=2, i=0)
-    fig = plot_new_cases(result=result, fig=fig)
+    
+    # New cases
+    fig.add_trace(
+        go.Bar(
+            x=result.index,
+            y=result['positive'], 
+            marker = {'color': 'rgb(200, 200, 255)', 'opacity': .5},
+            name='Daily Cases',
+        ),
+        row=1, col=2,
+    )
+
+    # New tests
+    fig.add_trace(
+        go.Bar(
+            x=result.index,
+            y=result['tests'], 
+            marker = {'color': 'rgb(200, 200, 200)', 'opacity': .5},
+            name='Daily Tests',
+        ),
+        row=2, col=2,
+    )    
+    
+    # Corrected tests and infections
+    fig.add_trace(
+        go.Bar(
+            x=result.index,
+            y=result['test_adjusted_positive_raw'], 
+            marker = {'color': 'rgb(200, 200, 255)', 'opacity': .5},
+            name='Adjusted Cases',
+        ),
+        row=2, col=1,
+    )     
+    fig.add_trace(
+        go.Scatter(
+            x=result.index, 
+            y=result['test_adjusted_positive'],                   
+            mode='lines', 
+            line_color='royalblue',
+            name='Smoothed Cases'
+        ),
+        row=2, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=result.index, 
+            y=result['infections'],                   
+            mode='lines', 
+            line_color='firebrick',
+            name='Infections'
+        ),
+        row=2, col=1,
+    )   
+    fig.update_xaxes(
+        range = [
+            PLOT_START,
+            result.index[-1] + pd.Timedelta(days=1),
+        ],
+        tickformat = '%m/%d'
+    )
 
     return fig
