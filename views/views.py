@@ -149,9 +149,9 @@ def county_detail_view(result, area):
         font={'color': 'rgb(0,0,0)'},
         titlefont={'size': 12},
         yaxis1={'range': [.75, 1.75]}, 
-        yaxis2={'range': [0, 2000]},
-        yaxis3={'range': [0, 2000]},
-        yaxis4={'range': [0, 20000]},
+        yaxis2={'range': [0, 2500]},
+        yaxis3={'range': [0, 2500]},
+        yaxis4={'range': [0, 25000]},
         showlegend=False,
     )
     fig.update_xaxes(
