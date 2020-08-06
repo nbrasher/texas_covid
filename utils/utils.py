@@ -1,3 +1,4 @@
+from google.cloud.storage import Client
 import pandas as pd
 import pickle
 import io
@@ -24,8 +25,12 @@ def load_cases():
             final_results (dict[str: pd.DataFrame]): Dict with keys as county names, 
                 values as DataFrame of Rt and 80% confidence bounds by day
     '''
+    # Download file from cloud storage
+    bucket = Client().bucket('texas-covid.appspot.com')
+    bucket.blob('final_results.pkl').download_to_filename('/tmp/final_results.pkl')
+
     # Get final computed results
-    with open('tmp/final_results.pkl', 'rb') as f:
+    with open('/tmp/final_results.pkl', 'rb') as f:
         final_results = pickle.load(f)
 
     return final_results
