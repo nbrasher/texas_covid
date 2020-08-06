@@ -1,6 +1,6 @@
+from google.cloud.storage import Client
 import pandas as pd
 import pickle
-import boto3
 import io
 import os
 import re
@@ -25,18 +25,13 @@ def load_cases():
             final_results (dict[str: pd.DataFrame]): Dict with keys as county names, 
                 values as DataFrame of Rt and 80% confidence bounds by day
     '''
-    # Set up S3 connection
-    s3c = boto3.client(
-        's3', 
-        region_name = 'us-east-2',
-        aws_access_key_id = os.environ['S3_ID'],
-        aws_secret_access_key = os.environ['S3_KEY']
-    )
-    results_file = s3c.get_object(Bucket= 'texas-covid', 
-                    Key = 'final_results.pkl')
-    
+    # Download file from cloud storage
+    bucket = Client().bucket('texas-covid.appspot.com')
+    bucket.blob('final_results.pkl').download_to_filename('/tmp/final_results.pkl')
+
     # Get final computed results
-    final_results = pickle.loads(results_file['Body'].read())
+    with open('/tmp/final_results.pkl', 'rb') as f:
+        final_results = pickle.load(f)
 
     return final_results
 
