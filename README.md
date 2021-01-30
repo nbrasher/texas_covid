@@ -7,3 +7,7 @@ The app downloads case count and model output from S3. For raw case count data g
 In order to run the Dash app locally:
 1. Install requirements with `pip install -r requirements.txt`
 1. Launch the App with `python main.py`
+
+To deploy to GCP
+1. Authenticate and set project
+1. Deploy with `gcloud app deploy`
