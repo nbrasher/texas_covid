@@ -21,17 +21,16 @@ app.layout = html.Div([
 ])
 
 # Load raw data and get county list
-final_results = load_cases()
-areas = [k for k, v in final_results.items() 
-            if k != 'timestamp']
+timestring, results = load_cases()
+areas = list(results.keys())
 
 all_counties_fig = all_counties_view(
-        final_results=final_results, 
+        final_results=results, 
         counties=areas
 )
 county_detail_fig = county_detail_view(
-        result=final_results[areas[0]], 
-        area=areas[0]
+        result=results["Houston"], 
+        area="Houston"
 )
 
 
@@ -56,12 +55,11 @@ main_layout = html.Div(children=[
         children=[
             html.Br(),
             html.P(
-                'Data Updated: ' + datetime.strftime(
-                final_results['timestamp'], '%m/%d %I:%M %p'),
+                f"Data Updated: {timestring}",
                 style = {
                     'background-color': 'GhostWhite', 
                     'align-items': 'center',
-                    'width': 225,
+                    'width': 250,
                     }
             ),
         ]
@@ -153,8 +151,8 @@ def display_page(pathname):
               [Input('county-dropdown', 'value')])
 def callback_detail_view(value):
     return areas_to_string(value), county_detail_view(
-        result=final_results[value], 
+        result=results[value], 
         area=value)
 
 if __name__ == '__main__':
-    app.server(host='0.0.0.0', port=8080)
+    app.run_server(host='0.0.0.0', port=8080)

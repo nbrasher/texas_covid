@@ -1,9 +1,7 @@
-from google.cloud.storage import Client
+from google.cloud import firestore
+from datetime import datetime
 import pandas as pd
 import pickle
-import io
-import os
-import re
 
 # Texas counties grouped into metro areas
 METROS = {
@@ -25,15 +23,23 @@ def load_cases():
             final_results (dict[str: pd.DataFrame]): Dict with keys as county names, 
                 values as DataFrame of Rt and 80% confidence bounds by day
     '''
-    # Download file from cloud storage
-    bucket = Client().bucket('texas-covid.appspot.com')
-    bucket.blob('final_results.pkl').download_to_filename('/tmp/final_results.pkl')
+    db = firestore.Client()
+    collection_ref = db.collection("model-results")
+    query = collection_ref.order_by(
+        "timestamp", direction=firestore.Query.DESCENDING
+    ).limit(1).stream()
+    query_output = [d.to_dict() for d in query]
 
-    # Get final computed results
-    with open('/tmp/final_results.pkl', 'rb') as f:
-        final_results = pickle.load(f)
+    doc = query_output[0]
+    timestamp = doc.pop("timestamp")
+    timestring = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M %p')
 
-    return final_results
+    results = {
+        k: pd.DataFrame(data=v).set_index("date")
+        for k, v in doc.items()
+    }
+
+    return timestring, results
 
 def areas_to_string(area):
     ''' Return a string describing county makeup of metro areaa
