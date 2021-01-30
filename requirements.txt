@@ -1,5 +1,5 @@
 # Deployment requirements
-google-cloud-storage==1.30.0
+google-cloud-firestore==2.0.2
 dash==1.11.0
 gunicorn==20.0.4
 numpy==1.18.1
