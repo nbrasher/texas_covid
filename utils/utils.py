@@ -6,7 +6,7 @@ import pickle
 # Texas counties grouped into metro areas
 METROS = {
     'Houston': ['Harris', 'Montgomery', 'Fort Bend', 'Brazoria', 'Galveston'],
-    'DFW': ['Dallas', 'Tarrant', 'Collin', 'Denton'],
+    'Dallas Fort Worth': ['Dallas', 'Tarrant', 'Collin', 'Denton'],
     'Austin': ['Travis', 'Williamson'],
     'San Antonio': ['Bexar'],
     'San Marcos': ['Hays'],
@@ -26,16 +26,17 @@ def load_cases():
     db = firestore.Client()
     collection_ref = db.collection("model-results")
     query = collection_ref.order_by(
-        "timestamp", direction=firestore.Query.DESCENDING
+        "updated", direction=firestore.Query.DESCENDING
     ).limit(1).stream()
     query_output = [d.to_dict() for d in query]
 
     doc = query_output[0]
-    timestamp = doc.pop("timestamp")
-    timestring = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M %p')
+    doc.pop("created")
+    timestamp = doc.pop("updated")
+    timestring = datetime.fromtimestamp(timestamp).strftime('%b %d, %-I:%M %p CT')
 
     results = {
-        k: pd.DataFrame(data=v).set_index("date")
+        k.replace("_", " ").title(): pd.DataFrame(data=v).set_index("date")
         for k, v in doc.items()
     }
 
